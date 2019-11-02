@@ -194,6 +194,7 @@ void ArduboyTones::nextTone()
   }
 #endif
 
+  if (freq > 0x8000) freq = 0;
   freq &= ~TONE_HIGH_VOLUME; // strip volume indicator from frequency
 
 #ifdef TONES_ADJUST_PRESCALER
@@ -205,7 +206,7 @@ void ArduboyTones::nextTone()
   else {
     tccrxbValue = _BV(WGM32) | _BV(CS31); // CTC mode, prescaler /8
 #endif
-    if (freq > 0x8000) { // if tone is silent
+    if (freq == 0) { // if tone is silent
       ocrValue = F_CPU / 8 / SILENT_FREQ / 2 - 1; // dummy tone for silence
       freq = SILENT_FREQ;
       toneSilent = true;
@@ -224,6 +225,7 @@ void ArduboyTones::nextTone()
   }
 
 #ifdef TONES_VOLUME_CONTROL
+
   if (toneHighVol && !toneSilent) {
     // set pin 2 to the compliment of pin 1
     if (bitRead(TONE_PIN_PORT, TONE_PIN)) {
