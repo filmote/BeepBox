@@ -1,7 +1,7 @@
 #include "src/utils/Arduboy2Ext.h"
-#include <ArduboyTones.h>
-#include <EEPROM.h>
+#include "src/ArduboyTones/ArduboyTones.h"
 #include "src/images/Images.h"
+#include <EEPROM.h>
 
 void composer_Render() {
 

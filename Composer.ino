@@ -1,10 +1,10 @@
 //#include "src/utils/Arduboy2Ext.h"
 #include "src/utils/Arduboy2Ext.h"
 
-#include <ArduboyTones.h>
-#include <EEPROM.h>
+#include "src/ArduboyTones/ArduboyTones.h"
 #include "src/images/Images.h"
 #include "src/fonts/Font3x5.h"
+#include <EEPROM.h>
 
 Arduboy2Ext arduboy;
 ArduboyTones sound(arduboy.audio.enabled);
