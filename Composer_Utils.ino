@@ -8,7 +8,9 @@
 #include <EEPROM.h>
 
 
-// Return the frequency of the note or the previous, valid frequency ..
+
+// -----------------------------------------------------------------------------
+//  Return the frequency of the note or the previous, valid frequency ..
 
 uint16_t getFreq(uint16_t x) {
 
@@ -23,6 +25,9 @@ uint16_t getFreq(uint16_t x) {
 
 }
 
+
+// -----------------------------------------------------------------------------
+//  Return the index in the selected range of the note ..
 
 uint8_t getNoteIndex(uint8_t range, uint16_t currNote) {
 
@@ -39,6 +44,9 @@ uint8_t getNoteIndex(uint8_t range, uint16_t currNote) {
 }
 
 
+// -----------------------------------------------------------------------------
+//  Return the Y value of the nominated note for rendering ..
+
 uint8_t getNoteYVal(uint8_t range, uint16_t currNote) {
 
   currNote = currNote & 0x7FFF;
@@ -53,6 +61,9 @@ uint8_t getNoteYVal(uint8_t range, uint16_t currNote) {
 
 }
 
+
+// -----------------------------------------------------------------------------
+//  Return the number of lines to render above or below the staff ..
 
 int8_t getNoteLinesAboveBelow(uint8_t range, uint16_t currNote) {
 
@@ -74,6 +85,10 @@ int8_t getNoteLinesAboveBelow(uint8_t range, uint16_t currNote) {
 
 }
 
+
+// -----------------------------------------------------------------------------
+//  Return the note above the nominated note in the same range ..
+
 uint16_t getNoteAbove(uint8_t range, uint16_t currNote) {
 
   currNote = currNote & 0x7FFF;
@@ -92,6 +107,10 @@ uint16_t getNoteAbove(uint8_t range, uint16_t currNote) {
   return 0;
 
 }
+
+
+// -----------------------------------------------------------------------------
+//  Return the note below the nominated note in the same range ..
 
 uint16_t getNoteBelow(uint8_t range, uint16_t currNote) {
 
@@ -113,11 +132,18 @@ uint16_t getNoteBelow(uint8_t range, uint16_t currNote) {
 }
 
 
+// -----------------------------------------------------------------------------
+//  Return the middle note of the selected range ..
+
 uint16_t getNoteMiddle(uint8_t range) {
 
   return pgm_read_word(&noteSeq[range][7]);
   
 }
+
+
+// -----------------------------------------------------------------------------
+//  Reset ready for a new tune!
 
 void resetAll() {
 
@@ -134,6 +160,9 @@ void resetAll() {
 }
 
 
+// -----------------------------------------------------------------------------
+//  Make a note when moving to the right ,,
+
 void makeNextNote(Note &note) {
 
   if (note.freq == TONES_END) {
@@ -144,6 +173,10 @@ void makeNextNote(Note &note) {
     note.duration = composerVars.noteLength;
 
 }
+
+
+// -----------------------------------------------------------------------------
+//  Export the current tune to the serial port ..
 
 void exportToSerial() {
 
@@ -170,6 +203,9 @@ void exportToSerial() {
 }
 
 
+// -----------------------------------------------------------------------------
+//  Increase the tempo ..
+
 uint16_t getTempo_Above(uint16_t tempo) {
 
   for (uint8_t x = 0; x < 7; x++) {
@@ -185,6 +221,11 @@ uint16_t getTempo_Above(uint16_t tempo) {
   return tempo;
 
 }
+
+
+
+// -----------------------------------------------------------------------------
+//  Decrease the tempo ..
 
 uint16_t getTempo_Below(uint16_t tempo) {
 
