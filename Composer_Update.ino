@@ -468,6 +468,7 @@ void composer_Update() {
 
 }
 
+
 void exportToSerial() {
 
   Serial.println("const uint16_t beepBox[] PROGMEM = {");
@@ -492,13 +493,14 @@ void exportToSerial() {
 
 }
 
+
 uint16_t getTempo_Above(uint16_t tempo) {
 
   for (uint8_t x = 0; x < 7; x++) {
 
-    if (tempo == tempos[x]) {
+    if (tempo == pgm_read_byte(&tempos[x])) {
       
-      return (x < 6 ? tempos[x + 1] : tempos[x]); 
+      return (x < 6 ? pgm_read_byte(&tempos[x + 1]) : pgm_read_byte(&tempos[x])); 
 
     }
 
@@ -512,9 +514,9 @@ uint16_t getTempo_Below(uint16_t tempo) {
 
   for (uint8_t x = 0; x < 7; x++) {
 
-    if (tempo == tempos[x]) {
+    if (tempo == pgm_read_byte(&tempos[x])) {
       
-      return (x > 0 ? tempos[x - 1] : tempos[x]); 
+      return (x > 0 ? pgm_read_byte(&tempos[x - 1]) : pgm_read_byte(&tempos[x])); 
 
     }
 

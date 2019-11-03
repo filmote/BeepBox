@@ -178,6 +178,11 @@ void loop() {
       splashScreen_Render();
       break;
 
+    case GameState::TitleScreen:
+      titleScreen_Update();
+      titleScreen_Render();
+      break;
+
     case GameState::Composer:
       composer_Update();
       composer_Render();

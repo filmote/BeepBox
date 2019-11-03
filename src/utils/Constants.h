@@ -4,9 +4,7 @@
 #define MENU_DELAY 50
 #define NUMBER_OF_NOTES 150
 
-uint16_t tempos[] = { 200, 175, 150, 125, 100, 75, 50 };
-
-
+const uint16_t PROGMEM tempos[] = { 250, 200, 175, 150, 125, 100, 75, 50 };
 
 const uint16_t PROGMEM noteSeq[8][15] = {
 

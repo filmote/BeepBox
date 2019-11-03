@@ -7,6 +7,7 @@
 
 enum GameState : uint8_t {
   SplashScreen,
+  TitleScreen,
   Composer
 };
 

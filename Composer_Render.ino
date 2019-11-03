@@ -4,6 +4,9 @@
 #include <EEPROM.h>
 #include "src/utils/Constants.h"
 
+
+const uint8_t PROGMEM yPos[] = { 12, 20, 32, 40, 48 };
+
 void composer_Render() {
 
   arduboy.drawFastHLine(0, 16, WIDTH);
@@ -135,8 +138,6 @@ void composer_Render() {
 
   if (composerVars.menuCounter == MENU_DELAY) {
 
-    const uint8_t yPos[] = { 12, 20, 32, 40, 48 };
-
     arduboy.fillRect(54,0, WIDTH - 54, HEIGHT, BLACK);
     arduboy.fillRect(54,0, WIDTH - 54, 8, WHITE);
     arduboy.drawRect(54,0, WIDTH - 54, HEIGHT, WHITE);
@@ -170,7 +171,7 @@ void composer_Render() {
           font3x5.print("\n\n");
         }
 
-        arduboy.drawFastVLine(57, yPos[menu.firstIndex], 5);
+        arduboy.drawFastVLine(57, pgm_read_byte(&yPos[menu.firstIndex]), 5);
         break;
 
       case 1:
@@ -213,7 +214,7 @@ void composer_Render() {
         font3x5.setCursor(60, 31);
         font3x5.print("Clear Tune\nExport to Serial\n");
 
-        arduboy.drawFastVLine(57, yPos[menu.secondIndex], 5);
+        arduboy.drawFastVLine(57, pgm_read_byte(&yPos[menu.secondIndex]), 5);
         break;
 
       case 2:
