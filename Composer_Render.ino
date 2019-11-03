@@ -4,9 +4,6 @@
 #include <EEPROM.h>
 #include "src/utils/Constants.h"
 
-
-const uint8_t PROGMEM yPos[] = { 12, 20, 32, 40, 48 };
-
 void composer_Render() {
 
   arduboy.drawFastHLine(0, 16, WIDTH);

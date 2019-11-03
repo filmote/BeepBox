@@ -19,12 +19,7 @@ void composer_Update() {
 
     if (arduboy.justPressed(A_BUTTON)) {
 
-      if (note.freq == TONES_END) {
-        composerVars.notes[composerVars.noteX + 1].freq = TONES_END;
-      }
-      note.freq = composerVars.noteY;
-      if (note.duration == 0)
-        note.duration = composerVars.noteLength;
+      makeNextNote(note);
 
     }
     else if (arduboy.pressed(A_BUTTON)) {
@@ -74,15 +69,15 @@ void composer_Update() {
 
     if (arduboy.justPressed(B_BUTTON)) {
 
-      Serial.println("1 _________________ ");
-      for (uint16_t x = 0; x < NUMBER_OF_NOTES; x++)
-      {
-        Serial.print(composerVars.notes[x].freq);
-        Serial.print(",");
-        Serial.print(composerVars.notes[x].duration);
-        Serial.print(" ");
-      }
-      Serial.println(" ");
+      // Serial.println("1 _________________ ");
+      // for (uint16_t x = 0; x < NUMBER_OF_NOTES; x++)
+      // {
+      //   Serial.print(composerVars.notes[x].freq);
+      //   Serial.print(",");
+      //   Serial.print(composerVars.notes[x].duration);
+      //   Serial.print(" ");
+      // }
+      // Serial.println(" ");
 
     }
     else if (arduboy.pressed(B_BUTTON)) {
@@ -123,14 +118,6 @@ void composer_Update() {
     //  A + B Not Pressed
 
     if (arduboy.notPressed(A_BUTTON) && arduboy.notPressed(B_BUTTON)) { 
-
-      // if (arduboy.justPressed(UP_BUTTON) && note.duration == 0) { // a blank note
-      //   composerVars.noteY = getNoteAbove(composerVars.range, composerVars.noteY);
-      // }
-
-      // if (arduboy.justPressed(DOWN_BUTTON) && note.duration == 0) { // a blank note
-      //   composerVars.noteY = getNoteBelow(composerVars.range, composerVars.noteY);
-      // }
 
       if (arduboy.justPressed(LEFT_BUTTON)) {
 
@@ -505,73 +492,5 @@ void composer_Update() {
     }
 
   }
-
-}
-
-void makeNextNote(Note &note) {
-
-  if (note.freq == TONES_END) {
-    composerVars.notes[composerVars.noteX + 1].freq = TONES_END;
-  }
-  note.freq = composerVars.noteY;
-  if (note.duration == 0)
-    note.duration = composerVars.noteLength;
-
-}
-
-void exportToSerial() {
-
-  Serial.println("const uint16_t beepBox[] PROGMEM = {");
-
-  for (uint16_t x = 0; x < NUMBER_OF_NOTES; x++) {
-
-    Note note = composerVars.notes[x];
-    
-    if (note.freq == TONES_END) break;
-    if (note.freq > 0x8000) note.freq = 0;
-
-    Serial.print(note.freq);
-    Serial.print(",");
-    Serial.print(note.duration);
-    Serial.print(", ");
-
-    if (x > 0 && x % 8 == 8) Serial.println(""); 
-
-  }
-    
-  Serial.println("TONES_END };");
-
-}
-
-
-uint16_t getTempo_Above(uint16_t tempo) {
-
-  for (uint8_t x = 0; x < 7; x++) {
-
-    if (tempo == pgm_read_byte(&tempos[x])) {
-      
-      return (x < 6 ? pgm_read_byte(&tempos[x + 1]) : pgm_read_byte(&tempos[x])); 
-
-    }
-
-  }
-
-  return tempo;
-
-}
-
-uint16_t getTempo_Below(uint16_t tempo) {
-
-  for (uint8_t x = 0; x < 7; x++) {
-
-    if (tempo == pgm_read_byte(&tempos[x])) {
-      
-      return (x > 0 ? pgm_read_byte(&tempos[x - 1]) : pgm_read_byte(&tempos[x])); 
-
-    }
-
-  }
-
-  return tempo;
 
 }
