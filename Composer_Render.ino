@@ -17,7 +17,7 @@ void composer_Render() {
 
   bool flash = arduboy.getFrameCountHalf(48);
 
-  int16_t xPos = 64;
+  int16_t xPos = 66;
 
   for (uint16_t i = composerVars.noteX; i < composerVars.noteX + 12; i++) {
 
@@ -95,7 +95,7 @@ void composer_Render() {
 
   // Render previous notes ..
 
-  xPos = 64;
+  xPos = 66;
 
   for (int16_t i = composerVars.noteX - 1; i > composerVars.noteX - 24; i--) {
 
@@ -233,6 +233,20 @@ void composer_Render() {
     }
 
   }
+
+
+  // Render range ..
+
+  arduboy.fillRect(-1, -1, 30, 8, BLACK);
+  arduboy.fillRect(0, 0, 28, 7, WHITE);
+
+  font3x5.setCursor(1, 0);
+  font3x5.setTextColor(BLACK);
+  font3x5.print("Range ");
+  font3x5.print(composerVars.range + 1);
+
+
+  // Render note count ..
 
   arduboy.fillRect(-1, 56, 30, 8, BLACK);
   arduboy.fillRect(0, 57, 28, 7, WHITE);

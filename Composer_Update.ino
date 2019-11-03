@@ -143,7 +143,7 @@ void composer_Update() {
 
       if (arduboy.justPressed(RIGHT_BUTTON)) {
 
-        if (composerVars.noteX < NUMBER_OF_NOTES - 2) {
+        if ((composerVars.noteX == 0 && composerVars.notes[composerVars.noteX].freq != TONES_END) || (composerVars.noteX > 0 && composerVars.noteX < NUMBER_OF_NOTES - 2)) {
 
           composerVars.noteX++;
           composerVars.noteY = getFreq(composerVars.noteX);
@@ -163,7 +163,7 @@ void composer_Update() {
 
       if (arduboy.justPressed(UP_BUTTON)) {
 
-        if (composerVars.noteX < NUMBER_OF_NOTES - 2 && composerVars.notes[composerVars.noteX + 1].freq == TONES_END) {
+        if ((composerVars.noteX == 0 && composerVars.notes[composerVars.noteX].freq != TONES_END) || (composerVars.noteX < NUMBER_OF_NOTES - 2 && composerVars.notes[composerVars.noteX + 1].freq == TONES_END)) {
 
           composerVars.noteX++;
           composerVars.noteY = getNoteAbove(composerVars.range, getFreq(composerVars.noteX));
@@ -178,7 +178,7 @@ void composer_Update() {
 
       if (arduboy.justPressed(DOWN_BUTTON)) {
 
-        if (composerVars.noteX < NUMBER_OF_NOTES - 2 && composerVars.notes[composerVars.noteX + 1].freq == TONES_END) {
+        if ((composerVars.noteX == 0 && composerVars.notes[composerVars.noteX].freq != TONES_END) || (composerVars.noteX < NUMBER_OF_NOTES - 2 && composerVars.notes[composerVars.noteX + 1].freq == TONES_END)) {
 
           composerVars.noteX++;
           composerVars.noteY = getNoteBelow(composerVars.range, getFreq(composerVars.noteX));
