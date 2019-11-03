@@ -83,6 +83,7 @@ void composer_Update() {
         Serial.print(" ");
       }
       Serial.println(" ");
+
     }
     else if (arduboy.pressed(B_BUTTON)) {
 
@@ -101,7 +102,7 @@ void composer_Update() {
 
       if (arduboy.justPressed(LEFT_BUTTON) && composerVars.noteX > 0) {
 
-        for (uint16_t x = composerVars.noteX - 1; x < NUMBER_OF_NOTES - 1; x++) {
+        for (uint16_t x = composerVars.noteX; x < NUMBER_OF_NOTES - 1; x++) {
 
           composerVars.notes[x] = composerVars.notes[x + 1];
 
@@ -123,13 +124,13 @@ void composer_Update() {
 
     if (arduboy.notPressed(A_BUTTON) && arduboy.notPressed(B_BUTTON)) { 
 
-      if (arduboy.justPressed(UP_BUTTON) && note.duration == 0) { // a blank note
-        composerVars.noteY = getNoteAbove(composerVars.range, composerVars.noteY);
-      }
+      // if (arduboy.justPressed(UP_BUTTON) && note.duration == 0) { // a blank note
+      //   composerVars.noteY = getNoteAbove(composerVars.range, composerVars.noteY);
+      // }
 
-      if (arduboy.justPressed(DOWN_BUTTON) && note.duration == 0) { // a blank note
-        composerVars.noteY = getNoteBelow(composerVars.range, composerVars.noteY);
-      }
+      // if (arduboy.justPressed(DOWN_BUTTON) && note.duration == 0) { // a blank note
+      //   composerVars.noteY = getNoteBelow(composerVars.range, composerVars.noteY);
+      // }
 
       if (arduboy.justPressed(LEFT_BUTTON)) {
 
@@ -142,9 +143,48 @@ void composer_Update() {
 
       if (arduboy.justPressed(RIGHT_BUTTON)) {
 
-        if (composerVars.noteX < NUMBER_OF_NOTES - 2 && note.freq != TONES_END) {
+        if (composerVars.noteX < NUMBER_OF_NOTES - 2) {
+
           composerVars.noteX++;
           composerVars.noteY = getFreq(composerVars.noteX);
+          
+          if (composerVars.notes[composerVars.noteX].freq == TONES_END) {
+
+            Note &note = composerVars.notes[composerVars.noteX];
+            makeNextNote(note);
+
+          }
+          
+        }
+
+        if (composerVars.noteY == 0) { composerVars.noteY = getNoteMiddle(composerVars.range); }
+
+      }
+
+      if (arduboy.justPressed(UP_BUTTON)) {
+
+        if (composerVars.noteX < NUMBER_OF_NOTES - 2 && composerVars.notes[composerVars.noteX + 1].freq == TONES_END) {
+
+          composerVars.noteX++;
+          composerVars.noteY = getNoteAbove(composerVars.range, getFreq(composerVars.noteX));
+          Note &note = composerVars.notes[composerVars.noteX];
+          makeNextNote(note);
+          
+        }
+
+        if (composerVars.noteY == 0) { composerVars.noteY = getNoteMiddle(composerVars.range); }
+
+      }
+
+      if (arduboy.justPressed(DOWN_BUTTON)) {
+
+        if (composerVars.noteX < NUMBER_OF_NOTES - 2 && composerVars.notes[composerVars.noteX + 1].freq == TONES_END) {
+
+          composerVars.noteX++;
+          composerVars.noteY = getNoteBelow(composerVars.range, getFreq(composerVars.noteX));
+          Note &note = composerVars.notes[composerVars.noteX];
+          makeNextNote(note);
+          
         }
 
         if (composerVars.noteY == 0) { composerVars.noteY = getNoteMiddle(composerVars.range); }
@@ -468,6 +508,16 @@ void composer_Update() {
 
 }
 
+void makeNextNote(Note &note) {
+
+  if (note.freq == TONES_END) {
+    composerVars.notes[composerVars.noteX + 1].freq = TONES_END;
+  }
+  note.freq = composerVars.noteY;
+  if (note.duration == 0)
+    note.duration = composerVars.noteLength;
+
+}
 
 void exportToSerial() {
 
