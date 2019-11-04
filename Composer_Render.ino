@@ -135,52 +135,52 @@ void composer_Render() {
 
   if (musicVars.menuCounter == MENU_DELAY) {
 
-    arduboy.fillRect(53, 0, WIDTH - 53, HEIGHT, BLACK);
-    arduboy.fillRect(54, 0, WIDTH - 54, 8, WHITE);
-    arduboy.drawRect(54, 0, WIDTH - 54, HEIGHT, WHITE);
+    arduboy.fillRect(51, 0, WIDTH - 51, HEIGHT, BLACK);
+    arduboy.fillRect(52, 0, WIDTH - 52, 8, WHITE);
+    arduboy.drawRect(52, 0, WIDTH - 52, HEIGHT, WHITE);
 
     Sprites::drawErase(117, 2, Images::Arrow_Left, 0);
     Sprites::drawErase(121, 2, Images::Arrow_Right, 0);
     
-    font3x5.setCursor(56, 1);
+    font3x5.setCursor(54, 1);
     font3x5.setTextColor(BLACK);
-    font3x5.print("BEEPBOX");
-    font3x5.setCursor(60, 11);
+    font3x5.print(F("TOOLBOX"));
+    font3x5.setCursor(58, 11);
     font3x5.setTextColor(WHITE);
 
     switch (menu.music.page) {
 
       case 0:
 
-        font3x5.print("Play from start\n");
-        font3x5.print("Play from cursor\n");
-        font3x5.setCursor(60, 31);
-        font3x5.print("Save to EEPROM\n");
+        font3x5.print(F("Play from start\n"));
+        font3x5.print(F("Play from cursor\n"));
+        font3x5.setCursor(58, 31);
+        font3x5.print(F("Save to EEPROM\n"));
 
         uint8_t c;
         EEPROM.get(50, c);
 
         if (c == 'c') { 
-          font3x5.print("Load from EEPROM\n"); 
-          font3x5.print("Clear EEPROM\n");
+          font3x5.print(F("Load from EEPROM\n")); 
+          font3x5.print(F("Clear EEPROM\n"));
         }
         else {
-          font3x5.print("\n\n");
+          font3x5.print(F("\n\n"));
         }
 
-        arduboy.drawFastVLine(57, pgm_read_byte(&yPos[menu.music.firstIndex]), 5);
+        arduboy.drawFastVLine(55, pgm_read_byte(&yPos[menu.music.firstIndex]), 5);
         break;
 
       case 1:
 
-        font3x5.print("Tempo: ");
+        font3x5.print(F("Tempo: "));
         
         if (menu.music.mode == MenuMode::Tempo) {
-          Sprites::drawOverwrite(87, 12, Images::Arrow_Left, 0);
-          Sprites::drawOverwrite(114, 12, Images::Arrow_Right, 0);
-          arduboy.fillRect(92, 11, 20, 7, WHITE);
+          Sprites::drawOverwrite(85, 12, Images::Arrow_Left, 0);
+          Sprites::drawOverwrite(112, 12, Images::Arrow_Right, 0);
+          arduboy.fillRect(90, 11, 20, 7, WHITE);
   
-          font3x5.setCursor(96, 11);
+          font3x5.setCursor(94, 11);
           font3x5.setTextColor(BLACK);
           font3x5.print(musicVars.noteLength);
           font3x5.setTextColor(WHITE);
@@ -191,15 +191,15 @@ void composer_Render() {
         }
 
         font3x5.setTextColor(WHITE);
-        font3x5.setCursor(60, 19);
-        font3x5.print("Range: ");
+        font3x5.setCursor(58, 19);
+        font3x5.print(F("Range: "));
         
         if (menu.music.mode == MenuMode::Range) {
-          Sprites::drawOverwrite(87, 20, Images::Arrow_Left, 0);
-          Sprites::drawOverwrite(105, 20, Images::Arrow_Right, 0);
-          arduboy.fillRect(92, 19, 11, 7, WHITE);
+          Sprites::drawOverwrite(85, 20, Images::Arrow_Left, 0);
+          Sprites::drawOverwrite(103, 20, Images::Arrow_Right, 0);
+          arduboy.fillRect(90, 19, 11, 7, WHITE);
   
-          font3x5.setCursor(96, 19);
+          font3x5.setCursor(94, 19);
           font3x5.setTextColor(BLACK);
           font3x5.print(musicVars.range + 1);
           font3x5.setTextColor(WHITE);
@@ -208,23 +208,25 @@ void composer_Render() {
           font3x5.print(musicVars.range + 1);
         }
 
-        font3x5.setCursor(60, 31);
-        font3x5.print("Clear Tune\nExport to Serial\nReturn to Menu");
+        font3x5.setCursor(58, 31);
+        font3x5.print(F("Clear Tune\nExport to Serial\nReturn to Menu"));
 
-        arduboy.drawFastVLine(57, pgm_read_byte(&yPos[menu.music.secondIndex]), 5);
+        arduboy.drawFastVLine(55, pgm_read_byte(&yPos[menu.music.secondIndex]), 5);
         break;
 
       case 2:
-        font3x5.print("A+L  Shrink note\n");
-        font3x5.print("A+R  Extend note\n");
-        font3x5.print("A+U  Move up\n");
-        font3x5.print("A+D  Move down\n");
-        font3x5.print("B+L  Delete note\n");
-        font3x5.print("B+R  Insert a note\n\n");
+        font3x5.setCursor(56, 11);
+        font3x5.print(F("A+L  Shrink note\n"));
+        font3x5.print(F("A+R  Extend note\n"));
+        font3x5.print(F("A+U  Move up\n"));
+        font3x5.print(F("A+D  Move down\n"));
+        font3x5.print(F("B+L  Delete note\n"));
+        font3x5.print(F("B+R  Insert a note\n\n"));
         break;
 
       case 3:
-        font3x5.print("To include a rest\nnote, use A+L to\nshrink a normal\nnote down to zero\nlength to toggle\nbetween modes.");
+        font3x5.setCursor(56, 11);
+        font3x5.print(F("To include a rest,\nselect an existing\nnote then press and\nhold the A button\nto toggle."));
         break;
 
     }
@@ -239,7 +241,7 @@ void composer_Render() {
 
   font3x5.setCursor(1, 0);
   font3x5.setTextColor(BLACK);
-  font3x5.print("Range ");
+  font3x5.print(F("Range "));
   font3x5.print(musicVars.range + 1);
 
 
@@ -250,8 +252,8 @@ void composer_Render() {
 
   font3x5.setCursor(1, 57);
   font3x5.setTextColor(BLACK);
-  if (musicVars.x + 1 < 10) font3x5.print("0");
-  if (musicVars.x + 1 < 100) font3x5.print("0");
+  if (musicVars.x + 1 < 10) font3x5.print(F("0"));
+  if (musicVars.x + 1 < 100) font3x5.print(F("0"));
   font3x5.print(musicVars.x + 1);
   font3x5.setCursor(16, 57);
   font3x5.print(NUMBER_OF_NOTES);

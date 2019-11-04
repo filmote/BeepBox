@@ -8,8 +8,8 @@
 //
 
 #define xOffset 37
-#define min_xOffset 4
-#define min_yOffset 44
+#define previewXOffset 4
+#define previewYOffset 44
 
 void bitmapScreen_Render() {
 
@@ -30,7 +30,7 @@ void bitmapScreen_Render() {
 
   // Render preview window ..
 
-  arduboy.drawRect(min_xOffset - 2, min_yOffset - 2, imageVars.xDim + 4, imageVars.yDim + 4, WHITE);
+  arduboy.drawRect(previewXOffset - 2, previewYOffset - 2, imageVars.xDim + 4, imageVars.yDim + 4, WHITE);
 
 
   for (uint8_t y = 0; y < imageVars.yDim; y++) {
@@ -44,7 +44,7 @@ void bitmapScreen_Render() {
       if (z & (1 << (y % 8))) {
 
         Sprites::drawSelfMasked(xOffset + (x*4), y * 4, Images::Block, 0);
-        arduboy.drawPixel(min_xOffset + x, min_yOffset + y, WHITE);
+        arduboy.drawPixel(previewXOffset + x, previewYOffset + y, WHITE);
 
       }
 
@@ -87,7 +87,7 @@ void bitmapScreen_Render() {
     
     font3x5.setCursor(56, 1);
     font3x5.setTextColor(BLACK);
-    font3x5.print("BEEPBOX");
+    font3x5.print(F("TOOLBOX"));
     font3x5.setCursor(60, 11);
     font3x5.setTextColor(WHITE);
 
@@ -95,29 +95,29 @@ void bitmapScreen_Render() {
 
       case 0:
 
-        font3x5.print("Save to EEPROM\n");
+        font3x5.print(F("Save to EEPROM\n"));
 
         uint8_t c;
         EEPROM.get(IMAGE_EEPROM, c);
 
         if (c == 'c') { 
-          font3x5.print("Load from EEPROM\n"); 
-          font3x5.print("Clear EEPROM\n");
+          font3x5.print(F("Load from EEPROM\n")); 
+          font3x5.print(F("Clear EEPROM\n"));
         }
         else {
-          font3x5.print("\n\n");
+          font3x5.print(F("\n\n"));
         }
 
         font3x5.setCursor(60, 39);
-        font3x5.print("Clear Image\n"); 
-        font3x5.print("Invert Image\n");
+        font3x5.print(F("Clear Image\n")); 
+        font3x5.print(F("Invert Image\n"));
 
         arduboy.drawFastVLine(57, pgm_read_byte(&yPos_2[menu.image.firstIndex]), 5);
         break;
 
       case 1:
 
-        font3x5.print("Size X: ");
+        font3x5.print(F("Size X: "));
         
         if (menu.image.mode == MenuMode::XDim) {
           Sprites::drawOverwrite(87, 12, Images::Arrow_Left, 0);
@@ -130,12 +130,12 @@ void bitmapScreen_Render() {
         }
         else {
           font3x5.print(imageVars.xDim);
-          font3x5.print(" px");
+          font3x5.print(F(" px"));
         }
 
         font3x5.setTextColor(WHITE);
         font3x5.setCursor(60, 19);
-        font3x5.print("Size Y: ");
+        font3x5.print(F("Size Y: "));
         
         if (menu.image.mode == MenuMode::YDim) {
           Sprites::drawOverwrite(87, 20, Images::Arrow_Left, 0);
@@ -148,12 +148,12 @@ void bitmapScreen_Render() {
         }
         else {
           font3x5.print(imageVars.yDim);
-          font3x5.print(" px");
+          font3x5.print(F(" px"));
         }
 
         font3x5.setTextColor(WHITE);
         font3x5.setCursor(60, 31);
-        font3x5.print("Export to Serial\nReturn to Menu");
+        font3x5.print(F("Export to Serial\nReturn to Menu"));
 
         arduboy.drawFastVLine(57, pgm_read_byte(&yPos[menu.image.secondIndex]), 5);
         break;

@@ -20,47 +20,66 @@ void composer_Update() {
     if (arduboy.justPressed(A_BUTTON)) {
 
       makeNextNote(note);
+      musicVars.restCounter = 1;
 
     }
     else if (arduboy.pressed(A_BUTTON)) {
 
+      if (musicVars.restCounter > 0) musicVars.restCounter++;
+
       if (arduboy.justPressed(LEFT_BUTTON)) {
+
+        musicVars.restCounter = 0;
 
         if (note.duration > 1 * musicVars.noteLength) {
           note.duration = note.duration - musicVars.noteLength;
-        }
-        else {
-          if (note.freq > 0x8000) {
-            note.freq = note.freq & 0x7FFF;
-          }
-          else {
-            note.freq = note.freq | 0x8000;
-          }
-
         }
 
       }
       else if (arduboy.justPressed(RIGHT_BUTTON)) {
 
+        musicVars.restCounter = 0;
+
         if (note.duration < 8 * musicVars.noteLength)
           note.duration = note.duration + musicVars.noteLength;
       }
-      else if (arduboy.justPressed(UP_BUTTON))
-      {
+      else if (arduboy.justPressed(UP_BUTTON)) {
 
         if (musicVars.y > 0) {
           note.freq = getNoteAbove(musicVars.range, note.freq);
           musicVars.y = getNoteAbove(musicVars.range, musicVars.y);
+          musicVars.restCounter = 0;
+          sound.tone(note.freq, NOTE_SAMPLE_DURATION);
         }
+        
       }
-      else if (arduboy.justPressed(DOWN_BUTTON))
-      {
+      else if (arduboy.justPressed(DOWN_BUTTON)) {
 
         if (musicVars.y > 0) {
           note.freq = getNoteBelow(musicVars.range, note.freq);
           musicVars.y = getNoteBelow(musicVars.range, musicVars.y);
+          musicVars.restCounter = 0;
+          sound.tone(note.freq, NOTE_SAMPLE_DURATION);
         }
+
       }
+      else if (musicVars.restCounter > REST_DELAY) {
+
+        if (note.freq > 0x8000) {
+          note.freq = note.freq & 0x7FFF;
+        }
+        else {
+          note.freq = note.freq | 0x8000;
+        }
+
+        musicVars.restCounter = 0;
+
+      }
+
+    }
+
+    if (arduboy.notPressed(A_BUTTON)) {
+      musicVars.restCounter = 0;
     }
 
 
@@ -119,8 +138,6 @@ void composer_Update() {
       else  if (musicVars.menuCounter < MENU_DELAY && arduboy.pressed(B_BUTTON)) {
         musicVars.menuCounter++;
       }
-
-
 
     }
 

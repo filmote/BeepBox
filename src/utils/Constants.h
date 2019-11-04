@@ -4,7 +4,9 @@
 #define MUSIC_EEPROM static_cast<uint16_t>(50)
 #define IMAGE_EEPROM static_cast<uint16_t>(850)
 #define MENU_DELAY 50
+#define REST_DELAY 25
 #define NUMBER_OF_NOTES 150
+#define NOTE_SAMPLE_DURATION 75
 
 const uint16_t PROGMEM tempos[] = { 250, 200, 175, 150, 125, 100, 75, 50 };
 const uint8_t PROGMEM yPos[] = { 12, 20, 32, 40, 48 };

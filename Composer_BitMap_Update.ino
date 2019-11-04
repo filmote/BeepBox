@@ -5,6 +5,8 @@
 // ----------------------------------------------------------------------------
 //  Handle state updates .. 
 //
+uint8_t maskAction = 0;
+
 void bitmapScreen_Update() { 
 
   if (imageVars.menuCounter < MENU_DELAY) {
@@ -14,32 +16,60 @@ void bitmapScreen_Update() {
       if ((imageVars.image[imageVars.y / 8][imageVars.x] & (1 << (imageVars.y % 8))) > 0) {
 
         imageVars.image[imageVars.y / 8][imageVars.x] = imageVars.image[imageVars.y / 8][imageVars.x] & ~(1 << (imageVars.y % 8));
+        maskAction = 0;
 
       }
       else {
 
         imageVars.image[imageVars.y / 8][imageVars.x] = imageVars.image[imageVars.y / 8][imageVars.x] | (1 << (imageVars.y % 8));
+        maskAction = 1;
 
       }
 
     }
 
-    if (arduboy.justPressed(UP_BUTTON) && imageVars.y > 0) {
-      imageVars.y--;
-    }
+    if (arduboy.pressed(A_BUTTON)) {
 
-    if (arduboy.justPressed(DOWN_BUTTON) && imageVars.y < 15) {
-      imageVars.y++;
-    }
+      if (arduboy.justPressed(UP_BUTTON) && imageVars.y > 0) {
+        imageVars.y--;
+        bitmapScreen_Update_Toggle(maskAction);
+      }
 
-    if (arduboy.justPressed(LEFT_BUTTON) && imageVars.x > 0) {
-      imageVars.x--;
-    }
+      if (arduboy.justPressed(DOWN_BUTTON) && imageVars.y < imageVars.yDim - 1) {
+        imageVars.y++;
+        bitmapScreen_Update_Toggle(maskAction);
+      }
 
-    if (arduboy.justPressed(RIGHT_BUTTON) && imageVars.x < 15) {
-      imageVars.x++;
-    }
+      if (arduboy.justPressed(LEFT_BUTTON) && imageVars.x > 0) {
+        imageVars.x--;
+        bitmapScreen_Update_Toggle(maskAction);
+      }
 
+      if (arduboy.justPressed(RIGHT_BUTTON) && imageVars.x < imageVars.xDim - 1) {
+        imageVars.x++;
+        bitmapScreen_Update_Toggle(maskAction);
+      }
+
+    }
+    else {
+              
+      if (arduboy.justPressed(UP_BUTTON) && imageVars.y > 0) {
+        imageVars.y--;
+      }
+
+      if (arduboy.justPressed(DOWN_BUTTON) && imageVars.y < imageVars.yDim - 1) {
+        imageVars.y++;
+      }
+
+      if (arduboy.justPressed(LEFT_BUTTON) && imageVars.x > 0) {
+        imageVars.x--;
+      }
+
+      if (arduboy.justPressed(RIGHT_BUTTON) && imageVars.x < imageVars.xDim - 1) {
+        imageVars.x++;
+      }
+
+    }
 
     // -----------------------------------------------------------------------------------
     //  B  Pressed Together
@@ -283,6 +313,17 @@ void bitmapScreen_Update() {
     
     }
 
+  }
+
+}
+
+void bitmapScreen_Update_Toggle(uint8_t maskAction) {
+
+  if (maskAction == 0) {
+    imageVars.image[imageVars.y / 8][imageVars.x] = imageVars.image[imageVars.y / 8][imageVars.x] & ~(1 << (imageVars.y % 8));
+  }
+  else {
+    imageVars.image[imageVars.y / 8][imageVars.x] = imageVars.image[imageVars.y / 8][imageVars.x] | (1 << (imageVars.y % 8));
   }
 
 }

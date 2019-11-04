@@ -36,6 +36,7 @@ struct MusicVars {
   uint8_t x = 0;
   uint16_t y = 0;
   uint8_t menuCounter = 0;
+  uint8_t restCounter = 0;
   uint16_t noteLength = 125;
   uint8_t range = 3;
 };
