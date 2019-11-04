@@ -16,15 +16,15 @@ void composer_Render() {
 
   int16_t xPos = 66;
 
-  for (uint16_t i = composerVars.noteX; i < composerVars.noteX + 12; i++) {
+  for (uint16_t i = musicVars.x; i < musicVars.x + 12; i++) {
 
-    Note note = composerVars.notes[i];
+    Note note = musicVars.notes[i];
 
 
     // If rendering the focus note and the freq is a 'pause' then render it at the current 'Y' position ..
 
-    if (i == composerVars.noteX && note.freq == NOTE_REST) {
-      note.freq = composerVars.noteY;
+    if (i == musicVars.x && note.freq == NOTE_REST) {
+      note.freq = musicVars.y;
     }
 
     if (note.freq == TONES_END) {
@@ -38,16 +38,16 @@ void composer_Render() {
 
       // Draw additional lines on the staff for this note if required ..
 
-      int8_t x = getNoteLinesAboveBelow(composerVars.range, note.freq);
+      int8_t x = getNoteLinesAboveBelow(musicVars.range, note.freq);
 
       if (x > 0) {
         for (uint8_t y = 0; y <= x; y = y + 2) {
-          arduboy.drawFastHLine(xPos - 2, 16 - (y*4), 9 + (6 * note.getDurationIndex(composerVars.noteLength)), WHITE);
+          arduboy.drawFastHLine(xPos - 2, 16 - (y*4), 9 + (6 * note.getDurationIndex(musicVars.noteLength)), WHITE);
         }
       }
       else if (x < 0) {
         for (uint8_t y = 0; y <= -x; y = y + 2) {
-          arduboy.drawFastHLine(xPos - 2, 48 + (y*4), 9 + (6 * note.getDurationIndex(composerVars.noteLength)), WHITE);
+          arduboy.drawFastHLine(xPos - 2, 48 + (y*4), 9 + (6 * note.getDurationIndex(musicVars.noteLength)), WHITE);
         }
 
       }
@@ -57,13 +57,13 @@ void composer_Render() {
 
         // If rendering the focus node ..
 
-        if ((i == composerVars.noteX && !flash) || i > composerVars.noteX || note.freq != composerVars.noteY) {
+        if ((i == musicVars.x && !flash) || i > musicVars.x || note.freq != musicVars.y) {
 
           if (note.freq < 0x8000) {   
-            Sprites::drawExternalMask(xPos, getNoteYVal(composerVars.range, note.freq), Images::Note, Images::Note_Mask, note.getDurationIndex(composerVars.noteLength), note.getDurationIndex(composerVars.noteLength));
+            Sprites::drawExternalMask(xPos, getNoteYVal(musicVars.range, note.freq), Images::Note, Images::Note_Mask, note.getDurationIndex(musicVars.noteLength), note.getDurationIndex(musicVars.noteLength));
           }
           else {
-            Sprites::drawExternalMask(xPos, getNoteYVal(composerVars.range, note.freq), Images::Note_Pause, Images::Note_Mask, note.getDurationIndex(composerVars.noteLength), note.getDurationIndex(composerVars.noteLength));
+            Sprites::drawExternalMask(xPos, getNoteYVal(musicVars.range, note.freq), Images::Note_Pause, Images::Note_Mask, note.getDurationIndex(musicVars.noteLength), note.getDurationIndex(musicVars.noteLength));
           }
 
         }
@@ -72,20 +72,20 @@ void composer_Render() {
 
       // Render flashing cursor ..
 
-      if (i == composerVars.noteX && flash) {
+      if (i == musicVars.x && flash) {
 
         if (note.duration == 0) {
-          Sprites::drawExternalMask(xPos, getNoteYVal(composerVars.range, composerVars.noteY), Images::Note_Hollow, Images::Note_Mask, 0, 0);
+          Sprites::drawExternalMask(xPos, getNoteYVal(musicVars.range, musicVars.y), Images::Note_Hollow, Images::Note_Mask, 0, 0);
         }
         else {
-          Sprites::drawExternalMask(xPos, getNoteYVal(composerVars.range, composerVars.noteY), Images::Note_Hollow, Images::Note_Mask, note.getDurationIndex(composerVars.noteLength), note.getDurationIndex(composerVars.noteLength));
+          Sprites::drawExternalMask(xPos, getNoteYVal(musicVars.range, musicVars.y), Images::Note_Hollow, Images::Note_Mask, note.getDurationIndex(musicVars.noteLength), note.getDurationIndex(musicVars.noteLength));
         }
 
       }
 
     }
 
-    xPos = xPos + (note.getDurationInterval(composerVars.noteLength) * 6);
+    xPos = xPos + (note.getDurationInterval(musicVars.noteLength) * 6);
 
   }
   
@@ -94,23 +94,23 @@ void composer_Render() {
 
   xPos = 66;
 
-  for (int16_t i = composerVars.noteX - 1; i > composerVars.noteX - 24; i--) {
+  for (int16_t i = musicVars.x - 1; i > musicVars.x - 24; i--) {
 
-    Note note = composerVars.notes[i];
+    Note note = musicVars.notes[i];
 
 
     // Draw additional lines on the staff for this note if required ..
     
-    int8_t x = getNoteLinesAboveBelow(composerVars.range, note.freq);
+    int8_t x = getNoteLinesAboveBelow(musicVars.range, note.freq);
 
     if (x > 0) {
       for (uint8_t y = 0; y <= x; y = y + 2) {
-        arduboy.drawFastHLine(xPos - (note.getDurationInterval(composerVars.noteLength) * 6) - 2, 16 - (y*4), 9 + (6 * note.getDurationIndex(composerVars.noteLength)), WHITE);
+        arduboy.drawFastHLine(xPos - (note.getDurationInterval(musicVars.noteLength) * 6) - 2, 16 - (y*4), 9 + (6 * note.getDurationIndex(musicVars.noteLength)), WHITE);
       }
     }
     else if (x < 0) {
       for (uint8_t y = 0; y <= -x; y = y + 2) {
-        arduboy.drawFastHLine(xPos - (note.getDurationInterval(composerVars.noteLength) * 6) - 2, 48 + (y*4), 9 + (6 * note.getDurationIndex(composerVars.noteLength)), WHITE);
+        arduboy.drawFastHLine(xPos - (note.getDurationInterval(musicVars.noteLength) * 6) - 2, 48 + (y*4), 9 + (6 * note.getDurationIndex(musicVars.noteLength)), WHITE);
       }
 
     }
@@ -120,24 +120,24 @@ void composer_Render() {
 
     if (i >= 0) {
       if (note.freq < 0x8000) {
-        Sprites::drawExternalMask(xPos - (note.getDurationInterval(composerVars.noteLength) * 6), getNoteYVal(composerVars.range, note.freq), Images::Note, Images::Note_Mask, note.getDurationIndex(composerVars.noteLength), note.getDurationIndex(composerVars.noteLength));
+        Sprites::drawExternalMask(xPos - (note.getDurationInterval(musicVars.noteLength) * 6), getNoteYVal(musicVars.range, note.freq), Images::Note, Images::Note_Mask, note.getDurationIndex(musicVars.noteLength), note.getDurationIndex(musicVars.noteLength));
       }
       else {
-        Sprites::drawExternalMask(xPos - (note.getDurationInterval(composerVars.noteLength) * 6), getNoteYVal(composerVars.range, note.freq), Images::Note_Pause, Images::Note_Mask, note.getDurationIndex(composerVars.noteLength), note.getDurationIndex(composerVars.noteLength));
+        Sprites::drawExternalMask(xPos - (note.getDurationInterval(musicVars.noteLength) * 6), getNoteYVal(musicVars.range, note.freq), Images::Note_Pause, Images::Note_Mask, note.getDurationIndex(musicVars.noteLength), note.getDurationIndex(musicVars.noteLength));
       }
     }
 
-    xPos = xPos - (note.getDurationInterval(composerVars.noteLength) * 6);
+    xPos = xPos - (note.getDurationInterval(musicVars.noteLength) * 6);
 
   }
 
 
 
-  if (composerVars.menuCounter == MENU_DELAY) {
+  if (musicVars.menuCounter == MENU_DELAY) {
 
-    arduboy.fillRect(54,0, WIDTH - 54, HEIGHT, BLACK);
-    arduboy.fillRect(54,0, WIDTH - 54, 8, WHITE);
-    arduboy.drawRect(54,0, WIDTH - 54, HEIGHT, WHITE);
+    arduboy.fillRect(53, 0, WIDTH - 53, HEIGHT, BLACK);
+    arduboy.fillRect(54, 0, WIDTH - 54, 8, WHITE);
+    arduboy.drawRect(54, 0, WIDTH - 54, HEIGHT, WHITE);
 
     Sprites::drawErase(117, 2, Images::Arrow_Left, 0);
     Sprites::drawErase(121, 2, Images::Arrow_Right, 0);
@@ -148,7 +148,7 @@ void composer_Render() {
     font3x5.setCursor(60, 11);
     font3x5.setTextColor(WHITE);
 
-    switch (menu.page) {
+    switch (menu.music.page) {
 
       case 0:
 
@@ -168,25 +168,25 @@ void composer_Render() {
           font3x5.print("\n\n");
         }
 
-        arduboy.drawFastVLine(57, pgm_read_byte(&yPos[menu.firstIndex]), 5);
+        arduboy.drawFastVLine(57, pgm_read_byte(&yPos[menu.music.firstIndex]), 5);
         break;
 
       case 1:
 
         font3x5.print("Tempo: ");
         
-        if (menu.mode == MenuMode::Tempo) {
+        if (menu.music.mode == MenuMode::Tempo) {
           Sprites::drawOverwrite(87, 12, Images::Arrow_Left, 0);
           Sprites::drawOverwrite(114, 12, Images::Arrow_Right, 0);
           arduboy.fillRect(92, 11, 20, 7, WHITE);
   
           font3x5.setCursor(96, 11);
           font3x5.setTextColor(BLACK);
-          font3x5.print(composerVars.noteLength);
+          font3x5.print(musicVars.noteLength);
           font3x5.setTextColor(WHITE);
         }
         else {
-          font3x5.print(composerVars.noteLength);
+          font3x5.print(musicVars.noteLength);
           font3x5.print(" ms");
         }
 
@@ -194,24 +194,24 @@ void composer_Render() {
         font3x5.setCursor(60, 19);
         font3x5.print("Range: ");
         
-        if (menu.mode == MenuMode::Range) {
+        if (menu.music.mode == MenuMode::Range) {
           Sprites::drawOverwrite(87, 20, Images::Arrow_Left, 0);
           Sprites::drawOverwrite(105, 20, Images::Arrow_Right, 0);
           arduboy.fillRect(92, 19, 11, 7, WHITE);
   
           font3x5.setCursor(96, 19);
           font3x5.setTextColor(BLACK);
-          font3x5.print(composerVars.range + 1);
+          font3x5.print(musicVars.range + 1);
           font3x5.setTextColor(WHITE);
         }
         else {
-          font3x5.print(composerVars.range + 1);
+          font3x5.print(musicVars.range + 1);
         }
 
         font3x5.setCursor(60, 31);
-        font3x5.print("Clear Tune\nExport to Serial\n");
+        font3x5.print("Clear Tune\nExport to Serial\nReturn to Menu");
 
-        arduboy.drawFastVLine(57, pgm_read_byte(&yPos[menu.secondIndex]), 5);
+        arduboy.drawFastVLine(57, pgm_read_byte(&yPos[menu.music.secondIndex]), 5);
         break;
 
       case 2:
@@ -240,7 +240,7 @@ void composer_Render() {
   font3x5.setCursor(1, 0);
   font3x5.setTextColor(BLACK);
   font3x5.print("Range ");
-  font3x5.print(composerVars.range + 1);
+  font3x5.print(musicVars.range + 1);
 
 
   // Render note count ..
@@ -250,9 +250,9 @@ void composer_Render() {
 
   font3x5.setCursor(1, 57);
   font3x5.setTextColor(BLACK);
-  if (composerVars.noteX + 1 < 10) font3x5.print("0");
-  if (composerVars.noteX + 1 < 100) font3x5.print("0");
-  font3x5.print(composerVars.noteX + 1);
+  if (musicVars.x + 1 < 10) font3x5.print("0");
+  if (musicVars.x + 1 < 100) font3x5.print("0");
+  font3x5.print(musicVars.x + 1);
   font3x5.setCursor(16, 57);
   font3x5.print(NUMBER_OF_NOTES);
   arduboy.drawPixel(14, 60, BLACK);

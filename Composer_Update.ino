@@ -9,9 +9,9 @@ void composer_Update() {
 
   // Get focus note ..
 
-  Note &note = composerVars.notes[composerVars.noteX];
+  Note &note = musicVars.notes[musicVars.x];
 
-  if (composerVars.menuCounter < MENU_DELAY) {
+  if (musicVars.menuCounter < MENU_DELAY) {
 
 
     // -----------------------------------------------------------------------------------
@@ -26,8 +26,8 @@ void composer_Update() {
 
       if (arduboy.justPressed(LEFT_BUTTON)) {
 
-        if (note.duration > 1 * composerVars.noteLength) {
-          note.duration = note.duration - composerVars.noteLength;
+        if (note.duration > 1 * musicVars.noteLength) {
+          note.duration = note.duration - musicVars.noteLength;
         }
         else {
           if (note.freq > 0x8000) {
@@ -42,23 +42,23 @@ void composer_Update() {
       }
       else if (arduboy.justPressed(RIGHT_BUTTON)) {
 
-        if (note.duration < 8 * composerVars.noteLength)
-          note.duration = note.duration + composerVars.noteLength;
+        if (note.duration < 8 * musicVars.noteLength)
+          note.duration = note.duration + musicVars.noteLength;
       }
       else if (arduboy.justPressed(UP_BUTTON))
       {
 
-        if (composerVars.noteY > 0) {
-          note.freq = getNoteAbove(composerVars.range, note.freq);
-          composerVars.noteY = getNoteAbove(composerVars.range, composerVars.noteY);
+        if (musicVars.y > 0) {
+          note.freq = getNoteAbove(musicVars.range, note.freq);
+          musicVars.y = getNoteAbove(musicVars.range, musicVars.y);
         }
       }
       else if (arduboy.justPressed(DOWN_BUTTON))
       {
 
-        if (composerVars.noteY > 0) {
-          note.freq = getNoteBelow(composerVars.range, note.freq);
-          composerVars.noteY = getNoteBelow(composerVars.range, composerVars.noteY);
+        if (musicVars.y > 0) {
+          note.freq = getNoteBelow(musicVars.range, note.freq);
+          musicVars.y = getNoteBelow(musicVars.range, musicVars.y);
         }
       }
     }
@@ -69,12 +69,13 @@ void composer_Update() {
 
     if (arduboy.justPressed(B_BUTTON)) {
 
+      musicVars.menuCounter = 1;
       // Serial.println("1 _________________ ");
       // for (uint16_t x = 0; x < NUMBER_OF_NOTES; x++)
       // {
-      //   Serial.print(composerVars.notes[x].freq);
+      //   Serial.print(musicVars.notes[x].freq);
       //   Serial.print(",");
-      //   Serial.print(composerVars.notes[x].duration);
+      //   Serial.print(musicVars.notes[x].duration);
       //   Serial.print(" ");
       // }
       // Serial.println(" ");
@@ -84,33 +85,47 @@ void composer_Update() {
 
       if (arduboy.justPressed(RIGHT_BUTTON)) {
 
-        for (uint16_t x = NUMBER_OF_NOTES - 2; x >= composerVars.noteX; x--) {
+        musicVars.menuCounter = 0;
 
-          composerVars.notes[x + 1] = composerVars.notes[x];
+        for (uint16_t x = NUMBER_OF_NOTES - 2; x >= musicVars.x; x--) {
 
-        }
-
-        composerVars.notes[composerVars.noteX].freq = composerVars.notes[composerVars.noteX + 1].freq;
-        composerVars.notes[composerVars.noteX].duration = composerVars.noteLength;
-
-      }
-
-      if (arduboy.justPressed(LEFT_BUTTON) && composerVars.noteX > 0) {
-
-        for (uint16_t x = composerVars.noteX; x < NUMBER_OF_NOTES - 1; x++) {
-
-          composerVars.notes[x] = composerVars.notes[x + 1];
+          musicVars.notes[x + 1] = musicVars.notes[x];
 
         }
 
-        composerVars.notes[NUMBER_OF_NOTES].freq = 0;
-        composerVars.notes[NUMBER_OF_NOTES].duration = composerVars.noteLength;
-
-        composerVars.noteX--;
-        composerVars.noteY = composerVars.notes[composerVars.noteX].freq;
+        musicVars.notes[musicVars.x].freq = musicVars.notes[musicVars.x + 1].freq;
+        musicVars.notes[musicVars.x].duration = musicVars.noteLength;
 
       }
 
+      else if (arduboy.justPressed(LEFT_BUTTON) && musicVars.x > 0) {
+
+        musicVars.menuCounter = 0;
+
+        for (uint16_t x = musicVars.x; x < NUMBER_OF_NOTES - 1; x++) {
+
+          musicVars.notes[x] = musicVars.notes[x + 1];
+
+        }
+
+        musicVars.notes[NUMBER_OF_NOTES].freq = 0;
+        musicVars.notes[NUMBER_OF_NOTES].duration = musicVars.noteLength;
+
+        musicVars.x--;
+        musicVars.y = musicVars.notes[musicVars.x].freq;
+
+      }
+
+      else  if (musicVars.menuCounter < MENU_DELAY && arduboy.pressed(B_BUTTON)) {
+        musicVars.menuCounter++;
+      }
+
+
+
+    }
+
+    if (arduboy.notPressed(B_BUTTON)) {
+      musicVars.menuCounter = 0;
     }
 
 
@@ -121,80 +136,63 @@ void composer_Update() {
 
       if (arduboy.justPressed(LEFT_BUTTON)) {
 
-        if (composerVars.noteX > 0) {
-          composerVars.noteX--;
-          composerVars.noteY = getFreq(composerVars.noteX);
+        if (musicVars.x > 0) {
+          musicVars.x--;
+          musicVars.y = getFreq(musicVars.x);
         }
 
       }
 
       if (arduboy.justPressed(RIGHT_BUTTON)) {
 
-        if ((composerVars.noteX == 0 && composerVars.notes[composerVars.noteX].freq != TONES_END) || (composerVars.noteX > 0 && composerVars.noteX < NUMBER_OF_NOTES - 2)) {
+        if ((musicVars.x == 0 && musicVars.notes[musicVars.x].freq != TONES_END) || (musicVars.x > 0 && musicVars.x < NUMBER_OF_NOTES - 2)) {
 
-          composerVars.noteX++;
-          composerVars.noteY = getFreq(composerVars.noteX);
+          musicVars.x++;
+          musicVars.y = getFreq(musicVars.x);
           
-          if (composerVars.notes[composerVars.noteX].freq == TONES_END) {
+          if (musicVars.notes[musicVars.x].freq == TONES_END) {
 
-            Note &note = composerVars.notes[composerVars.noteX];
+            Note &note = musicVars.notes[musicVars.x];
             makeNextNote(note);
 
           }
           
         }
 
-        if (composerVars.noteY == 0) { composerVars.noteY = getNoteMiddle(composerVars.range); }
+        if (musicVars.y == 0) { musicVars.y = getNoteMiddle(musicVars.range); }
 
       }
 
       if (arduboy.justPressed(UP_BUTTON)) {
 
-        if ((composerVars.noteX == 0 && composerVars.notes[composerVars.noteX].freq != TONES_END) || (composerVars.noteX < NUMBER_OF_NOTES - 2 && composerVars.notes[composerVars.noteX + 1].freq == TONES_END)) {
+        if ((musicVars.x == 0 && musicVars.notes[musicVars.x].freq != TONES_END) || (musicVars.x < NUMBER_OF_NOTES - 2 && musicVars.notes[musicVars.x + 1].freq == TONES_END)) {
 
-          composerVars.noteX++;
-          composerVars.noteY = getNoteAbove(composerVars.range, getFreq(composerVars.noteX));
-          Note &note = composerVars.notes[composerVars.noteX];
+          musicVars.x++;
+          musicVars.y = getNoteAbove(musicVars.range, getFreq(musicVars.x));
+          Note &note = musicVars.notes[musicVars.x];
           makeNextNote(note);
           
         }
 
-        if (composerVars.noteY == 0) { composerVars.noteY = getNoteMiddle(composerVars.range); }
+        if (musicVars.y == 0) { musicVars.y = getNoteMiddle(musicVars.range); }
 
       }
 
       if (arduboy.justPressed(DOWN_BUTTON)) {
 
-        if ((composerVars.noteX == 0 && composerVars.notes[composerVars.noteX].freq != TONES_END) || (composerVars.noteX < NUMBER_OF_NOTES - 2 && composerVars.notes[composerVars.noteX + 1].freq == TONES_END)) {
+        if ((musicVars.x == 0 && musicVars.notes[musicVars.x].freq != TONES_END) || (musicVars.x < NUMBER_OF_NOTES - 2 && musicVars.notes[musicVars.x + 1].freq == TONES_END)) {
 
-          composerVars.noteX++;
-          composerVars.noteY = getNoteBelow(composerVars.range, getFreq(composerVars.noteX));
-          Note &note = composerVars.notes[composerVars.noteX];
+          musicVars.x++;
+          musicVars.y = getNoteBelow(musicVars.range, getFreq(musicVars.x));
+          Note &note = musicVars.notes[musicVars.x];
           makeNextNote(note);
           
         }
 
-        if (composerVars.noteY == 0) { composerVars.noteY = getNoteMiddle(composerVars.range); }
+        if (musicVars.y == 0) { musicVars.y = getNoteMiddle(musicVars.range); }
 
       }
 
-    }
-
-
-    // -----------------------------------------------------------------------------------
-    //  A + B  Pressed Together
-
-    if ((arduboy.pressed(A_BUTTON) && arduboy.justPressed(B_BUTTON)) ||
-        (arduboy.justPressed(A_BUTTON) && arduboy.pressed(B_BUTTON))) {
-      composerVars.menuCounter = 1;
-    }
-
-    if (composerVars.menuCounter < MENU_DELAY && arduboy.pressed(A_BUTTON) && arduboy.pressed(B_BUTTON)) {
-      composerVars.menuCounter++;
-    }
-
-    if (arduboy.notPressed(A_BUTTON) || arduboy.notPressed(B_BUTTON)) {
-      composerVars.menuCounter = 0;
     }
 
   }
@@ -204,79 +202,79 @@ void composer_Update() {
     // -----------------------------------------------------------------------------------
     //  Menu Controls ..
 
-    switch (menu.page) {
+    switch (menu.music.page) {
 
       case 0:
 
         if (arduboy.justPressed(LEFT_BUTTON)) {
 
-          menu.page = 3;
+          menu.music.page = 3;
           
         }
 
         if (arduboy.justPressed(RIGHT_BUTTON)) {
 
-          menu.page = 1;
+          menu.music.page = 1;
           
         }
 
-        if (arduboy.justPressed(UP_BUTTON) && menu.firstIndex > 0) {
+        if (arduboy.justPressed(UP_BUTTON) && menu.music.firstIndex > 0) {
 
-            menu.firstIndex--;
+            menu.music.firstIndex--;
 
         }
 
-        if (arduboy.justPressed(DOWN_BUTTON) && menu.firstIndex < 4) {
+        if (arduboy.justPressed(DOWN_BUTTON) && menu.music.firstIndex < 4) {
 
-          if (menu.firstIndex == 2) {
+          if (menu.music.firstIndex == 2) {
 
             uint8_t c;
-            EEPROM.get(50, c);
+            EEPROM.get(MUSIC_EEPROM, c);
 
             if (c == 'c') { 
-              menu.firstIndex++;
+              menu.music.firstIndex++;
             }
 
           }
           else {
-            menu.firstIndex++;
+            menu.music.firstIndex++;
           }
 
         }
         
         if (arduboy.justPressed(B_BUTTON)) {
-          composerVars.menuCounter = 0;
+          musicVars.menuCounter = 0;
         }
 
         if (arduboy.justPressed(A_BUTTON)) {
 
-          switch (menu.firstIndex) {
+          switch (menu.music.firstIndex) {
 
             case 0:
-              sound.tonesInRAM(static_cast<uint16_t *>(&composerVars.notes[0].freq));
+              sound.tonesInRAM(static_cast<uint16_t *>(&musicVars.notes[0].freq));
               break;
 
             case 1:
-              sound.tonesInRAM(static_cast<uint16_t *>(&composerVars.notes[composerVars.noteX].freq));
+              sound.tonesInRAM(static_cast<uint16_t *>(&musicVars.notes[musicVars.x].freq));
               break;
 
             case 2:
-              composerVars.hasBeenSaved = 'c';
-              EEPROM.put(50, composerVars);
+              musicVars.hasBeenSaved = 'c';
+              EEPROM.put(MUSIC_EEPROM, musicVars);
               break;
 
             case 3:
               {
                 uint8_t c;
-                EEPROM.get(50, c);
-                if (c == 'c') EEPROM.get(50, composerVars);
+                EEPROM.get(MUSIC_EEPROM, c);
+                if (c == 'c') EEPROM.get(MUSIC_EEPROM, musicVars);
               }
               break;
 
             case 4:
-              EEPROM.put(50, 'd');
-              composerVars.hasBeenSaved = ' ';
-              menu.firstIndex = 2;
+              EEPROM.put(MUSIC_EEPROM, 'd');
+              musicVars.hasBeenSaved = ' ';
+              menu.music.firstIndex = 2;
               break;
 
           }
@@ -287,46 +285,46 @@ void composer_Update() {
   
       case 1:
 
-        if (arduboy.justPressed(LEFT_BUTTON) && (menu.mode == MenuMode::Nothing)) {
+        if (arduboy.justPressed(LEFT_BUTTON) && (menu.music.mode == MenuMode::Nothing)) {
 
-          menu.page = 0;
+          menu.music.page = 0;
           
         }
 
-        if (arduboy.justPressed(RIGHT_BUTTON) && menu.mode == MenuMode::Nothing) {
+        if (arduboy.justPressed(RIGHT_BUTTON) && menu.music.mode == MenuMode::Nothing) {
 
-          menu.page = 2;
+          menu.music.page = 2;
           
         }
 
-        if (arduboy.justPressed(UP_BUTTON) && menu.secondIndex > 0 && menu.mode == MenuMode::Nothing) {
+        if (arduboy.justPressed(UP_BUTTON) && menu.music.secondIndex > 0 && menu.music.mode == MenuMode::Nothing) {
 
-          menu.secondIndex--;
-
-        }
-
-        if (arduboy.justPressed(DOWN_BUTTON) && menu.secondIndex < 3 && menu.mode == MenuMode::Nothing) {
-
-          menu.secondIndex++;
+          menu.music.secondIndex--;
 
         }
 
-        if (menu.mode != MenuMode::Nothing && arduboy.justPressed(LEFT_BUTTON)) {
+        if (arduboy.justPressed(DOWN_BUTTON) && menu.music.secondIndex < 4 && menu.music.mode == MenuMode::Nothing) {
 
-          switch (menu.secondIndex) {
+          menu.music.secondIndex++;
+
+        }
+
+        if (menu.music.mode != MenuMode::Nothing && arduboy.justPressed(LEFT_BUTTON)) {
+
+          switch (menu.music.secondIndex) {
 
             case 0:
               {
-                uint16_t noteLength = composerVars.noteLength;
+                uint16_t noteLength = musicVars.noteLength;
                 uint16_t noteLengthAbove = getTempo_Above(noteLength);
 
                 if (noteLength != noteLengthAbove) {
 
-                  composerVars.noteLength = noteLengthAbove;
+                  musicVars.noteLength = noteLengthAbove;
 
                   for (uint8_t x = 0; x < NUMBER_OF_NOTES; x++) {
 
-                    composerVars.notes[x].duration = composerVars.notes[x].getDurationInterval(noteLength) * noteLengthAbove;
+                    musicVars.notes[x].duration = musicVars.notes[x].getDurationInterval(noteLength) * noteLengthAbove;
 
                   }
 
@@ -337,17 +335,17 @@ void composer_Update() {
 
             case 1:
               {
-                uint16_t range = composerVars.range;
+                uint16_t range = musicVars.range;
 
                 if (range > 0) {
 
-                  composerVars.range--;
+                  musicVars.range--;
 
                   for (uint8_t x = 0; x < NUMBER_OF_NOTES; x++) {
 
-                    if (composerVars.notes[x].freq != TONES_END && composerVars.notes[x].freq != NOTE_REST) {
-                      composerVars.notes[x].freq = pgm_read_word( &noteSeq[range - 1][getNoteIndex(range, composerVars.notes[x].freq)] );
-                      composerVars.noteY = getFreq(composerVars.noteX);
+                    if (musicVars.notes[x].freq != TONES_END && musicVars.notes[x].freq != NOTE_REST) {
+                      musicVars.notes[x].freq = pgm_read_word( &noteSeq[range - 1][getNoteIndex(range, musicVars.notes[x].freq)] );
+                      musicVars.y = getFreq(musicVars.x);
                     }
 
                   }
@@ -361,22 +359,22 @@ void composer_Update() {
                     
         }
 
-        if (menu.mode != MenuMode::Nothing && arduboy.justPressed(RIGHT_BUTTON)) {
+        if (menu.music.mode != MenuMode::Nothing && arduboy.justPressed(RIGHT_BUTTON)) {
 
-          switch (menu.secondIndex) {
+          switch (menu.music.secondIndex) {
 
             case 0:
               {
-                uint16_t noteLength = composerVars.noteLength;
+                uint16_t noteLength = musicVars.noteLength;
                 uint16_t noteLengthBelow = getTempo_Below(noteLength);
 
                 if (noteLength != noteLengthBelow) {
 
-                  composerVars.noteLength = noteLengthBelow;
+                  musicVars.noteLength = noteLengthBelow;
 
                   for (uint8_t x = 0; x < NUMBER_OF_NOTES; x++) {
 
-                    composerVars.notes[x].duration = composerVars.notes[x].getDurationInterval(noteLength) * noteLengthBelow;
+                    musicVars.notes[x].duration = musicVars.notes[x].getDurationInterval(noteLength) * noteLengthBelow;
 
                   }
 
@@ -387,17 +385,17 @@ void composer_Update() {
 
             case 1:
               {
-                uint16_t range = composerVars.range;
+                uint16_t range = musicVars.range;
 
                 if (range < 7) {
 
-                  composerVars.range++;
+                  musicVars.range++;
 
                   for (uint8_t x = 0; x < NUMBER_OF_NOTES; x++) {
 
-                    if (composerVars.notes[x].freq != TONES_END && composerVars.notes[x].freq != NOTE_REST) {
-                      composerVars.notes[x].freq = pgm_read_word(&noteSeq[range + 1][getNoteIndex(range, composerVars.notes[x].freq)]);
-                      composerVars.noteY = getFreq(composerVars.noteX);
+                    if (musicVars.notes[x].freq != TONES_END && musicVars.notes[x].freq != NOTE_REST) {
+                      musicVars.notes[x].freq = pgm_read_word(&noteSeq[range + 1][getNoteIndex(range, musicVars.notes[x].freq)]);
+                      musicVars.y = getFreq(musicVars.x);
                     }
 
                   }
@@ -413,12 +411,12 @@ void composer_Update() {
 
         if (arduboy.justPressed(A_BUTTON)) {
 
-          if (menu.mode == MenuMode::Nothing) {
+          if (menu.music.mode == MenuMode::Nothing) {
 
-            switch (menu.secondIndex) {
+            switch (menu.music.secondIndex) {
 
               case 0 ... 1:
-                menu.mode = static_cast<MenuMode>(menu.secondIndex);
+                menu.music.mode = static_cast<MenuMode>(menu.music.secondIndex);
                 break;
 
               case 2:
@@ -429,20 +427,29 @@ void composer_Update() {
                 exportToSerial();
                 break;
 
+              case 4:
+                menu.music.mode = MenuMode::Nothing;
+                menu.music.page = 0;
+                menu.music.firstIndex = 0;
+                menu.music.secondIndex = 0;
+                musicVars.menuCounter = 0;
+                gameState = GameState::TitleScreen;
+                break;
+
             }
 
           }
           else {
 
-            menu.mode = MenuMode::Nothing;
+            menu.music.mode = MenuMode::Nothing;
 
           }
 
         }
     
         if (arduboy.justPressed(B_BUTTON)) {
-          composerVars.menuCounter = 0;
-          menu.mode = MenuMode::Nothing;
+          musicVars.menuCounter = 0;
+          menu.music.mode = MenuMode::Nothing;
         }
 
         break; 
@@ -451,19 +458,19 @@ void composer_Update() {
 
         if (arduboy.justPressed(LEFT_BUTTON)) {
 
-          menu.page = 1;
+          menu.music.page = 1;
           
         }
 
         if (arduboy.justPressed(RIGHT_BUTTON)) {
 
-          menu.page = 3;
+          menu.music.page = 3;
           
         }
         
         if (arduboy.justPressed(B_BUTTON)) {
 
-          composerVars.menuCounter = 0;
+          musicVars.menuCounter = 0;
 
         }
         break;
@@ -472,19 +479,19 @@ void composer_Update() {
 
         if (arduboy.justPressed(LEFT_BUTTON)) {
 
-          menu.page = 2;
+          menu.music.page = 2;
           
         }
 
         if (arduboy.justPressed(RIGHT_BUTTON)) {
 
-          menu.page = 0;
+          menu.music.page = 0;
           
         }
         
         if (arduboy.justPressed(B_BUTTON)) {
 
-          composerVars.menuCounter = 0;
+          musicVars.menuCounter = 0;
           
         }
         break;

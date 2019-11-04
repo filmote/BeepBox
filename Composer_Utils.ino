@@ -16,12 +16,12 @@ uint16_t getFreq(uint16_t x) {
 
   for (uint16_t i = x; i >= 0; i--) {
 
-    Note note = composerVars.notes[i];
+    Note note = musicVars.notes[i];
     if (note.freq != TONES_END) return note.freq;
 
   }
 
-  return composerVars.notes[x].freq;
+  return musicVars.notes[x].freq;
 
 }
 
@@ -147,15 +147,33 @@ uint16_t getNoteMiddle(uint8_t range) {
 
 void resetAll() {
 
-  for (uint8_t x = 0; x < NUMBER_OF_NOTES; x++) {
-    composerVars.notes[x].freq = 0;
-    composerVars.notes[x].duration = composerVars.noteLength;
-  }
+  if (gameState == GameState::Composer) {
 
-  composerVars.range = 3;
-  composerVars.notes[0].freq = TONES_END;
-  composerVars.noteY = getNoteMiddle(composerVars.range);
-  composerVars.noteX = 0;
+    for (uint8_t x = 0; x < NUMBER_OF_NOTES; x++) {
+      musicVars.notes[x].freq = 0;
+      musicVars.notes[x].duration = musicVars.noteLength;
+    }
+
+    musicVars.range = 3;
+    musicVars.notes[0].freq = TONES_END;
+    musicVars.y = getNoteMiddle(musicVars.range);
+    musicVars.x = 0;
+
+  }
+  else {
+
+    for (uint8_t y = 0; y < 2; y++) {
+
+      for (uint8_t x = 0; x < 16; x++) {
+        imageVars.image[y][x]= 0;
+      }
+
+    }
+    
+    imageVars.y = 0;
+    imageVars.x = 0;
+
+  }
 
 }
 
@@ -166,11 +184,11 @@ void resetAll() {
 void makeNextNote(Note &note) {
 
   if (note.freq == TONES_END) {
-    composerVars.notes[composerVars.noteX + 1].freq = TONES_END;
+    musicVars.notes[musicVars.x + 1].freq = TONES_END;
   }
-  note.freq = composerVars.noteY;
+  note.freq = musicVars.y;
   if (note.duration == 0)
-    note.duration = composerVars.noteLength;
+    note.duration = musicVars.noteLength;
 
 }
 
@@ -184,7 +202,7 @@ void exportToSerial() {
 
   for (uint16_t x = 0; x < NUMBER_OF_NOTES; x++) {
 
-    Note note = composerVars.notes[x];
+    Note note = musicVars.notes[x];
     
     if (note.freq == TONES_END) break;
     if (note.freq > 0x8000) note.freq = 0;

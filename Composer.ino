@@ -11,7 +11,8 @@ Arduboy2Ext arduboy;
 ArduboyTones sound(arduboy.audio.enabled);
 Font3x5 font3x5;
 
-ComposerVars composerVars;
+MusicVars musicVars;
+ImageVars imageVars;
 MenuVars menu;
 
 GameState gameState = GameState::SplashScreen;
@@ -62,6 +63,11 @@ void loop() {
       composer_Render();
       break;
 
+    case GameState::Designer:
+      bitmapScreen_Update();
+      bitmapScreen_Render();
+      break;
+      
   }
 
   arduboy.display(true);

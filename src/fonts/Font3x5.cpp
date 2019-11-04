@@ -12,6 +12,7 @@
 #define CHAR_PERIOD 46
 #define CHAR_PLUS 43
 #define CHAR_COMMA 44
+#define CHAR_COLON 58
 #define CHAR_LETTER_A 65
 #define CHAR_LETTER_Z 90
 #define CHAR_LETTER_A_LOWER 97
@@ -24,12 +25,14 @@
   #define FONT_PERIOD_INDEX 63
   #define FONT_PLUS_INDEX 64
   #define FONT_COMMA_INDEX 65
+  #define FONT_COLON_INDEX 66
   #define FONT_NUMBER_INDEX 52
 #else
   #define FONT_EXCLAMATION_INDEX 36
   #define FONT_PERIOD_INDEX 37
   #define FONT_PLUS_INDEX 38
   #define FONT_COMMA_INDEX 39
+  #define FONT_COLON_INDEX 40
   #define FONT_NUMBER_INDEX 26
 #endif
 
@@ -90,7 +93,7 @@ const uint8_t PROGMEM font_images[] = {
 0x1A,	0x12,	0x16, // z
 #endif
 0x1F, 0x11, 0x1F, // 0  
-0x00, 0x1F, 0x00,
+0x02, 0x1F, 0x00,
 0x1D, 0x15, 0x17,  
 0x11, 0x15, 0x1F,  
 0x07, 0x04, 0x1F,  
@@ -103,6 +106,7 @@ const uint8_t PROGMEM font_images[] = {
 0X00, 0x10, 0x00, // .
 0X08, 0x1c, 0x08, // +
 0X20, 0x18, 0x00, // ,
+0X00, 0x14, 0x00, // :
 };
 
 
@@ -120,7 +124,7 @@ size_t Font3x5::write(uint8_t c) {
 
   if (c == '\n')          { _cursorX = _baseX; _cursorY += _lineHeight; }
   else if (c == ' ')      { _cursorX += 2; }
-  else if (c == '~')      { _cursorX += 2; }
+  else if (c == '~')      { _cursorX += 1; }
   else {
 
     printChar(c, _cursorX, _cursorY);
@@ -169,6 +173,10 @@ void Font3x5::printChar(const char c, const int8_t x, int8_t y) {
 
     case CHAR_COMMA:
       idx = FONT_COMMA_INDEX;
+      break;
+
+    case CHAR_COLON:
+      idx = FONT_COLON_INDEX;
       break;
 
   }

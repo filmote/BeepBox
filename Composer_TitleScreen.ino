@@ -9,9 +9,17 @@ void titleScreen_Update() {
 
 	auto justPressed = arduboy.justPressedButtons();
 
-  if (justPressed > 0) {
+  if (arduboy.justPressed(A_BUTTON)) {
 
     gameState = GameState::Composer; 
+    resetAll();
+
+  }
+
+  if (arduboy.justPressed(B_BUTTON)) {
+
+    gameState = GameState::Designer; 
+    resetAll();
 
   }
 
