@@ -1,5 +1,5 @@
 #include "src/utils/Arduboy2Ext.h"
-#include "src/images/Splash.h"
+#include "src/images/Images.h"
 
 
 // ----------------------------------------------------------------------------

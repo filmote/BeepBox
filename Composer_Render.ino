@@ -14,7 +14,8 @@ void composer_Render() {
 
   bool flash = arduboy.getFrameCountHalf(48);
 
-  int16_t xPos = 66;
+
+  int16_t xPos = 78;
 
   for (uint16_t i = musicVars.x; i < musicVars.x + 12; i++) {
 
@@ -92,7 +93,7 @@ void composer_Render() {
 
   // Render previous notes ..
 
-  xPos = 66;
+  xPos = 78;
 
   for (int16_t i = musicVars.x - 1; i > musicVars.x - 24; i--) {
 
@@ -234,12 +235,20 @@ void composer_Render() {
   }
 
 
+  // Icon ..
+
+  arduboy.fillRect(0, 0, 31, HEIGHT, BLACK);
+  arduboy.drawFastVLine(29, 0, HEIGHT, WHITE);
+
+  Sprites::drawOverwrite(5, 3, Images::Frame_Small, 0);
+  Sprites::drawSelfMasked(6, 4, Images::Music_Icon, 0);
+
+
   // Render range ..
 
-  arduboy.fillRect(-1, -1, 30, 8, BLACK);
-  arduboy.fillRect(0, 0, 28, 7, WHITE);
+  arduboy.fillRect(0, 28, 28, 7, WHITE);
 
-  font3x5.setCursor(1, 0);
+  font3x5.setCursor(1, 28);
   font3x5.setTextColor(BLACK);
   font3x5.print(F("Range "));
   font3x5.print(musicVars.range + 1);
@@ -247,17 +256,19 @@ void composer_Render() {
 
   // Render note count ..
 
-  arduboy.fillRect(-1, 56, 30, 8, BLACK);
-  arduboy.fillRect(0, 57, 28, 7, WHITE);
+  arduboy.fillRect(0, 37, 28, 7, WHITE);
 
-  font3x5.setCursor(1, 57);
+  font3x5.setCursor(1, 37);
   font3x5.setTextColor(BLACK);
   if (musicVars.x + 1 < 10) font3x5.print(F("0"));
   if (musicVars.x + 1 < 100) font3x5.print(F("0"));
   font3x5.print(musicVars.x + 1);
-  font3x5.setCursor(16, 57);
+  font3x5.setCursor(16, 37);
   font3x5.print(NUMBER_OF_NOTES);
-  arduboy.drawPixel(14, 60, BLACK);
+  arduboy.drawPixel(14, 42, BLACK);
+
+
+  Sprites::drawOverwrite(1, 49, Images::HoldB, 0);
 
 }
 

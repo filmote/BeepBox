@@ -1,5 +1,5 @@
 #include "src/utils/Arduboy2Ext.h"
-#include "src/images/Splash.h"
+#include "src/images/Images.h"
 
 
 
@@ -8,24 +8,29 @@
 //
 
 #define xOffset 37
-#define previewXOffset 4
-#define previewYOffset 44
+#define previewXOffset 8
+#define previewYOffset 46
 
 void bitmapScreen_Render() {
+
+  Sprites::drawOverwrite(7, 3, Images::Frame_Small, 0);
+  Sprites::drawSelfMasked(8, 4, Images::Art_Icon, 0);
 
 
   // Render coordinates ..
 
-  arduboy.fillRect(-1, -1, 35, 8, BLACK);
-  arduboy.fillRect(0, 0, 33, 7, WHITE);
+  arduboy.fillRect(0, 26, 33, 7, WHITE);
   arduboy.drawFastVLine(34, 0, HEIGHT, WHITE);
 
-  font3x5.setCursor(2 + (imageVars.x < 10 && imageVars.y < 10 ? 3 : 0) + ((imageVars.x < 10 && imageVars.y >= 10) || (imageVars.x >= 10 && imageVars.y < 10) ? 2 : 0), 0);
+  font3x5.setCursor(2 + (imageVars.x < 10 && imageVars.y < 10 ? 3 : 0) + ((imageVars.x < 10 && imageVars.y >= 10) || (imageVars.x >= 10 && imageVars.y < 10) ? 2 : 0), 26);
   font3x5.setTextColor(BLACK);
   font3x5.print("X~");
   font3x5.print(imageVars.x);
   font3x5.print(":Y~");
   font3x5.print(imageVars.y);
+
+
+  Sprites::drawSelfMasked(4, 36, Images::Preview, 0);
 
 
   // Render preview window ..
@@ -54,6 +59,7 @@ void bitmapScreen_Render() {
 
   }
 
+  /*
   arduboy.drawHorizontalDottedLine(xOffset -1, xOffset - 1 + (imageVars.xDim * 4), (imageVars.y * 4) - 1);
   arduboy.drawHorizontalDottedLine(xOffset -1, xOffset - 1 + (imageVars.xDim * 4), (imageVars.y * 4) + 3);
 
@@ -64,7 +70,7 @@ void bitmapScreen_Render() {
   arduboy.drawFastVLine(xOffset - 1, imageVars.y * 4, 3, WHITE);
   arduboy.drawFastVLine(xOffset - 1 + (imageVars.xDim * 4), imageVars.y * 4, 3, WHITE);
   arduboy.drawFastHLine(xOffset + (imageVars.x * 4), (imageVars.yDim * 4), 3, WHITE);
-
+  */
 
   if (arduboy.getFrameCountHalf(64)) {
     arduboy.drawRect(xOffset + (imageVars.x * 4) - 1, (imageVars.y * 4) - 1, 5, 5, WHITE);
@@ -73,8 +79,10 @@ void bitmapScreen_Render() {
     Sprites::drawSelfMasked(xOffset + (imageVars.x * 4) - 1, (imageVars.y * 4) - 1, Images::Block_Highlight, 0);
   }
 
+  Sprites::drawOverwrite(102, 49, Images::HoldB, 0);
 
-  // Render po-up menu ..
+
+  // Render pop-up menu ..
 
   if (imageVars.menuCounter == MENU_DELAY) {
 
